@@ -26,14 +26,21 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        // delegate: 대리인
         OAuth2UserService delegate = new DefaultOAuth2UserService();
+        // OAuth2UserSerivce를 통해서 사용자 정보 불러옴
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
+        // 현재 로그인 진행 중인 서비스를 구분하는 콛
+        // 네이버 로그인, 구글 로그인 구분하기 위해 사용
         String registrationId =
                 userRequest
                         .getClientRegistration()
                         .getRegistrationId();
 
+        // OAuth2 로그인 진행 시 키가 되는 필드값. Primary Key와 같은 의미
+        // 구글의 경우 기본적으로 코드를 지원하지만, 네이버, 카카오 등은 지원하지 않음
+        // 네이버 로그인, 구글 로그인 동시 지원할 때 사용됨
         String userNameAttributeName =
                 userRequest
                         .getClientRegistration()
@@ -41,10 +48,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                         .getUserInfoEndpoint()
                         .getUserNameAttributeName();
 
+        // OAuth2UserService를 통해 가져온 OAuth2User의 attribute를 담은 클래스
+        // 이후 네이버 등 다른 소셜 로그인도 이 클래스 사용
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         User user = saveOrUpdate(attributes);
 
+        // SessionUser(): 세션에 사용자 정보를 저장하기 위한 dto 클래스
         httpSession.setAttribute("user", new SessionUser(user));
 
         return new DefaultOAuth2User(
@@ -55,10 +65,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private User saveOrUpdate(OAuthAttributes attributes) {
+        // 이메일로 user entity 찾음
         User user = userRepository.findByEmail(attributes.getEmail())
+                // 1) user entity의 이름과 사진 업데이트
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
+                // 2) user entity 없으면 attribute를 entity로 변환
                 .orElse(attributes.toEntity());
 
+        // userRepository 통해서 변경사항 저장
         return userRepository.save(user);
     }
 }
