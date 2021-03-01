@@ -8,6 +8,11 @@ spring:
    # password:
    # driver-class-name: org.h2.Driver
 
+  datasource:
+    url: webservice.c7lmmj1i3i2l.ap-northeast-2.rds.amazonaws.com
+    username: hugebird
+    password: 5ab5c87a
+    driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: create
