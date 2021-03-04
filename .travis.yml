@@ -20,7 +20,7 @@ before_install:
 before_deploy:
   - zip -r webservice *
   - mkdir -p deploy
-  - mv webservice.zip deploy/webservie.zip
+  - mv webservice.zip deploy/webservice.zip
 
 deploy:
   - provider: s3
