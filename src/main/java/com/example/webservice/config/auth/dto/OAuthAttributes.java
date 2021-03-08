@@ -9,6 +9,7 @@ import java.util.Map;
 
 @Getter
 @Builder
+// OAuth2UserService를 통해 가져온 OAuth2User의 attribute를 담은 클래스
 // User class를 직접 사용하지 않는 이유
 // User 클래스를 세션에 저장하기 위해서는 User 클래스에 직렬화를 구현해야 함
 // 그러나, 엔티티 클래스는 언제 다른 엔티티와 관계가 형성될 지 모름

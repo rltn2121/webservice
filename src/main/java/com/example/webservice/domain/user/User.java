@@ -29,6 +29,7 @@ public class User extends BaseTimeEntity {
     private Role role;
 
     @Builder
+    // 사용자 생성
     public User(String name, String email, String picture, Role role) {
         this.name = name;
         this.email = email;
@@ -36,6 +37,7 @@ public class User extends BaseTimeEntity {
         this.role = role;
     }
 
+    // 사용자 정보 업데이트
     public User update(String name, String picture){
         this.name = name;
         this.picture = picture;

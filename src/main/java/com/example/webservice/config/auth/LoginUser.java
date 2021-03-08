@@ -9,6 +9,5 @@ import java.lang.annotation.Target;
 // PARAMETER로 지정 -> 메소드의 파라미터로 선언된 객체에서만 사용할 수 있음
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-// 이 파일을 어노테이션 클래스로 지정
 public @interface LoginUser {
 }
